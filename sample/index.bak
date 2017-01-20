@@ -1,0 +1,254 @@
+<html>
+<head>
+	<title>SyMan Sample</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+	<link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/dark-hive/jquery-ui.css" />
+	<script src="http://code.jquery.com/jquery-1.12.4.min.js"></script>
+	<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+	<script src="http://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+	<style>
+	.ui-page-active {
+		background: #222222;
+	}
+	.center {
+		text-align: center;
+	}
+	#player.ui-widget-header {
+		font-size: 1.5em;
+		padding: 7px 0;
+		margin: 0 auto;
+	}
+	#score.ui-widget-header {
+		font-family: "Lucida Console", Monaco, monospace;
+		font-size: 1.5em;
+		padding: 7px 0;
+		color: #ff0000;
+		text-shadow: none;
+		margin: 0 auto;
+	}
+	#control {
+		padding: 10px 0;
+	}
+	#control svg {
+		max-width: 340px;
+	}
+	</style>
+	<script>
+	$(function(){
+		var tones = {};
+		var pt = (new Audio()).canPlayType("audio/ogg; codecs=vorbis") ? "o" : "m";
+		var curTones, ct;
+		if(pt === "o"){
+			$("[data-role='page']").after("Ogg");
+			console.log("Loading Ogg");
+			tones["A4"] = new Audio('tones/ogg/A_440.ogg');
+			tones["E4"] = new Audio('tones/ogg/E_329.ogg');
+			tones["E5"] = new Audio('tones/ogg/E_659.ogg');
+			tones["C4"] = new Audio('tones/ogg/C_554.ogg');
+		} else {
+			$("[data-role='page']").after("MPEG");
+			console.log("Loading MP3");
+			tones["A4"] = new Audio('tones/mp3/A_440.mp3');
+			tones["E4"] = new Audio('tones/mp3/E_329.mp3');
+			tones["E5"] = new Audio('tones/mp3/E_659.mp3');
+			tones["C4"] = new Audio('tones/mp3/C_554.mp3');
+		}
+		function playAudio(){
+			curTone.volume = 1.0;
+			curTone.play();
+		}
+		function pauseAudio(){
+			curTone.pause();
+		}
+		function stopAudio(){
+			curTone.volume = 0.0;
+			curTone.pause();
+			curTone.currentTime = 0;
+		}
+		$("path").hover(
+			function(){
+				$(this).css("fill-opacity", "1");
+			},
+			function(){
+				$(this).css("fill-opacity", "0.25");
+			}
+		)
+		.mousedown(function(e){
+			$(this).css("fill-opacity", "1");
+/*
+			switch($(this).attr("id")){
+				case "redQuad":
+					// A Note
+					curTone = $("#A_440").get(0);
+					break;
+				case "greenQuad":
+					// E Note, Octave lower
+					curTone = $("#E_329").get(0);
+					break;
+				case "blueQuad":
+					// E Note
+					curTone = $("#E_659").get(0);
+					break;
+				case "yellowQuad":
+					// C# Note
+					curTone = $("#C_554").get(0);
+					break;
+			}
+			playAudio();
+*/
+			curTone = tones[$(this).data("tone")];
+			playAudio();
+		})
+		.mouseup(function(e){
+			stopAudio();
+			$(this).css("fill-opacity", "0.25");
+		});
+		$("document").on("tap vmousedown", "path", function(e){
+			$t = $(this);
+			$t.css("fill-opacity", "1");
+/*
+			switch($(this).attr("id")){
+				case "redQuad":
+					// A Note
+					curTone = $("#A_440").get(0);
+					break;
+				case "greenQuad":
+					// E Note, Octave lower
+					curTone = $("#E_329").get(0);
+					break;
+				case "blueQuad":
+					// E Note
+					curTone = $("#E_659").get(0);
+					break;
+				case "yellowQuad":
+					// C# Note
+					curTone = $("#C_554").get(0);
+					break;
+			}
+*/
+			curAudio = tones[$t.data(tone)];
+			playAudio();
+			setTimeout(function(){
+				stopAudio();
+				$t.css("fill-opacity", "0.25");
+			}, 1150);
+		});
+	});
+	</script>
+</head>
+<body>
+<div data-role="page">
+	<div data-role="header">
+		<A href="../" data-ajax="false">Home</a>
+		<h2>PLAY SYMAN</h2>
+	</div>
+	<div data-role="content" class="ui-widget">
+		<div id="player" class="ui-widget-header ui-corner-top center">Twisty</div>
+		<div id="score" class="ui-widget-header ui-corner-bottom center">012345</div>
+		<div id="control" class="center">
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="svg4200"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   width="400"
+   height="400"
+   viewBox="0 0 400 400"
+   sodipodi:docname="ColorBoard_transparent25_1.svg">
+  <metadata
+     id="metadata4206">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <defs
+     id="defs4204" />
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1280"
+     inkscape:window-height="751"
+     id="namedview4202"
+     showgrid="false"
+     inkscape:zoom="1.3772202"
+     inkscape:cx="145.75975"
+     inkscape:cy="253.0613"
+     inkscape:window-x="0"
+     inkscape:window-y="250"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg4200" />
+  <path
+     style="fill:#ff4937;fill-opacity:0.25;stroke:#fe4438;stroke-opacity:1"
+     d="m 254.93201,124.70829 c -27.40186,27.40186 -75.36422,25.13148 -102.20402,0 -25.26475,-23.65667 -51.06913,-51.038875 -77.050379,-77.201475 79.028529,-60.132815 165.408989,-64.49728 254.396699,0 -17.2311,18.67612 -49.80072,51.859905 -75.1423,77.201475 z"
+     id="redQuad"
+     inkscape:connector-curvature="0"
+     sodipodi:nodetypes="ssccs" 
+     data-tone="A4" />
+  <path
+     style="fill:#14b423;fill-opacity:0.25;stroke:#14b622;stroke-opacity:1"
+     d="m 123.31572,142.26342 c 26.95235,26.95235 21.30596,78.79119 0,103.08103 -21.30596,24.28984 -50.563693,54.39362 -74.921799,81.95745 -65.887655,-112.0474 -61.796707,-186.78193 0,-256.242901 20.929826,19.981747 47.969455,44.252071 74.921799,71.204421 z"
+     id="greenQuad"
+     inkscape:connector-curvature="0"
+     sodipodi:nodetypes="zzccz" 
+     data-tone="E4" />
+  <path
+     style="fill:#5ccbff;fill-opacity:0.25;stroke:#5ccbff;stroke-opacity:1"
+     d="m 148.57963,275.28309 c 21.4352,-22.63723 77.75321,-24.57428 102.32749,0 24.57428,24.57428 53.11271,51.74437 79.23847,76.57434 -89.06229,67.66093 -178.03169,59.31446 -254.539275,0 28.033825,-27.90382 51.538115,-53.93711 72.973315,-76.57434 z"
+     id="blueQuad"
+     inkscape:connector-curvature="0"
+     sodipodi:nodetypes="zzccz" 
+     data-tone="E5" />
+  <path
+     style="fill:#ffff00;fill-opacity:0.25;stroke:#feff03;stroke-opacity:1"
+     d="m 278.15379,253.94637 c -23.68472,-23.68472 -20.93353,-82.14847 0,-103.082 20.93353,-20.93353 53.73241,-58.068451 74.90549,-82.173466 62.94638,73.800056 59.49958,190.072856 0,256.222966 -22.92195,-22.0382 -51.22077,-47.28278 -74.90549,-70.9675 z"
+     id="yellowQuad"
+     inkscape:connector-curvature="0"
+     sodipodi:nodetypes="zzccz" 
+     data-tone="C4"/>
+</svg>
+		</div>
+		<div id=="tones">
+			<audio id="A_440">
+				<source src="tones/ogg/A_440.ogg" type="audio/ogg" preload="auto">
+				<source src="tones/mp3/A_440.mp3" type="audio/mpeg" preload="auto">
+				Your browser does not support the audio element.
+			</audio> 
+			<audio id="C_554">
+				<source src="tones/ogg/C_554.ogg" type="audio/ogg" preload="auto">
+				<source src="tones/mp3/C_554.mp3" type="audio/mpeg" preload="auto">
+				Your browser does not support the audio element.
+			</audio> 
+			<audio id="E_329">
+				<source src="tones/ogg/E_329.ogg" type="audio/ogg" preload="auto">
+				<source src="tones/mp3/E_329.mp3" type="audio/mpeg" preload="auto">
+				Your browser does not support the audio element.
+			</audio> 
+			<audio id="E_659">
+				<source src="tones/ogg/E_659.ogg" type="audio/ogg" preload="auto">
+				<source src="tones/mp3/E_659.mp3" type="audio/mpeg" preload="auto">
+				Your browser does not support the audio element.
+			</audio> 
+		</div>
+	</div>
+</div>
+</body>
+</html>

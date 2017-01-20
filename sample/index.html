@@ -1,0 +1,230 @@
+<html>
+<head>
+	<title>SyMan Sample</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+	<link rel="stylesheet" href="http://code.jquery.com/ui/1.12.1/themes/dark-hive/jquery-ui.css" />
+	<script src="http://code.jquery.com/jquery-1.12.4.min.js"></script>
+	<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+	<script src="http://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+	<style>
+	.ui-page-active {
+		background: #222222;
+	}
+	.center {
+		text-align: center;
+	}
+	#player.ui-widget-header {
+		font-size: 1.5em;
+		padding: 7px 0;
+		margin: 0 auto;
+	}
+	#score.ui-widget-header {
+		font-family: "Lucida Console", Monaco, monospace;
+		font-size: 1.5em;
+		padding: 7px 0;
+		color: #ff0000;
+		text-shadow: none;
+		margin: 0 auto;
+	}
+	#control {
+		padding: 10px 0;
+	}
+	#control svg {
+		max-width: 340px;
+	}
+	</style>
+	<script>
+	$(function(){
+		var tones = {};
+		var pt = (new Audio()).canPlayType("audio/ogg; codecs=vorbis") ? "o" : "m";
+		var curTones, ct;
+
+		if(pt === "o"){
+			$("[data-role='page']").after("Ogg");
+			console.log("Loading Ogg");
+			tones["A4"] = new Audio('tones/ogg/A_440.ogg');
+			tones["E4"] = new Audio('tones/ogg/E_329.ogg');
+			tones["E5"] = new Audio('tones/ogg/E_659.ogg');
+			tones["C4"] = new Audio('tones/ogg/C_554.ogg');
+		} else {
+			$("[data-role='page']").after("MPEG");
+			console.log("Loading MP3");
+			tones["A4"] = new Audio('tones/mp3/A_440.mp3');
+			tones["E4"] = new Audio('tones/mp3/E_329.mp3');
+			tones["E5"] = new Audio('tones/mp3/E_659.mp3');
+			tones["C4"] = new Audio('tones/mp3/C_554.mp3');
+		}
+
+		function detectOS(agent){
+			var os;
+			switch(true){
+				case /(iphone|ipod|ipad)/i.test(agent):
+					os = "iOS";
+					break;
+				case /(apple|mac)/i.test(agent):
+					os = "Mac OS";
+					break;
+				case /blackberry/i.test(agent):
+					os = "BlackBerry";
+					break;
+				case /android/i.test(agent):
+					os = "Android";
+					break;
+				case /(ubuntu|linux)/i.test(agent):
+					os = "Linux";
+					break;
+				case /windows/i.test(agent):
+					os="Windows";
+					break;
+				default:
+					var a = agent.match(/^Mozilla \d.0 \((.*); (.*);*\) .*\/.+ (.*)\/(.*)/i);
+					os = a[0] + " " + a[1];
+			}
+			return os;
+		}
+
+		function detectBrowser(agent){
+			var b;
+			switch(true){
+				case /firefox/i.test(agent):
+					b = "FireFox";
+					break;
+				case /chrome/i.test(agent):
+					b = "Chrome";
+					break;
+				case /(internet\sexplorer|edge|msie)/i.test(agent):
+					b = "Internet Explorer";
+					break;
+				case /safari/i.test(agent):
+					b = "Safari";
+					break;
+				default:
+				b = agent;
+			}
+			return b;
+		}
+
+		function customizeForDevice(){
+			var ua = navigator.userAgent;
+			var info = {
+				os: detectOS(ua),
+				web: detectBrowser(ua),
+				sw: $(window).width(),
+				sh: $(window).height()
+			};
+			return info;
+		}
+
+		console.log(customizeForDevice());
+
+		function playAudio(){
+			curTone.volume = 1.0;
+			curTone.play();
+		}
+
+		function pauseAudio(){
+			curTone.pause();
+		}
+
+		function stopAudio(){
+			curTone.volume = 0.0;
+			curTone.pause();
+			curTone.currentTime = 0;
+		}
+
+		$("path").hover(
+			function(){
+				$(this).css("fill-opacity", "1");
+			},
+			function(){
+				$(this).css("fill-opacity", "0.25");
+			}
+		)
+		.mousedown(function(e){
+			$(this).css("fill-opacity", "1");
+			curTone = tones[$(this).data("tone")];
+			playAudio();
+		})
+		.mouseup(function(e){
+			stopAudio();
+			$(this).css("fill-opacity", "0.25");
+		});
+		$("document").on("tap vmousedown", "svg path", function(e){
+			$t = $(e.target);
+			$t.css("fill-opacity", "1");
+			curAudio = tones[$t.data("tone")];
+			playAudio();
+			setTimeout(function(){
+				stopAudio();
+				$t.css("fill-opacity", "0.25");
+			}, 1150);
+		});
+	});
+	</script>
+</head>
+<body>
+<div data-role="page">
+	<div data-role="header">
+		<A href="../" data-ajax="false">Home</a>
+		<h2>PLAY SYMAN</h2>
+	</div>
+	<div data-role="content" class="ui-widget">
+		<div id="player" class="ui-widget-header ui-corner-top center">Twisty</div>
+		<div id="score" class="ui-widget-header ui-corner-bottom center">012345</div>
+		<div id="control" class="center">
+<svg id="svg4200" width="400" height="400" viewBox="0 0 400 400">
+  <metadata id="metadata4206">
+  </metadata>
+  <path
+     style="fill:#ff4937;fill-opacity:0.25;stroke:#fe4438;stroke-opacity:1"
+     d="m 254.93201,124.70829 c -27.40186,27.40186 -75.36422,25.13148 -102.20402,0 -25.26475,-23.65667 -51.06913,-51.038875 -77.050379,-77.201475 79.028529,-60.132815 165.408989,-64.49728 254.396699,0 -17.2311,18.67612 -49.80072,51.859905 -75.1423,77.201475 z"
+     id="redQuad"
+     inkscape:connector-curvature="0"
+     sodipodi:nodetypes="ssccs" 
+     data-tone="A4" />
+  <path
+     style="fill:#14b423;fill-opacity:0.25;stroke:#14b622;stroke-opacity:1"
+     d="m 123.31572,142.26342 c 26.95235,26.95235 21.30596,78.79119 0,103.08103 -21.30596,24.28984 -50.563693,54.39362 -74.921799,81.95745 -65.887655,-112.0474 -61.796707,-186.78193 0,-256.242901 20.929826,19.981747 47.969455,44.252071 74.921799,71.204421 z"
+     id="greenQuad"
+     inkscape:connector-curvature="0"
+     sodipodi:nodetypes="zzccz" 
+     data-tone="E4" />
+  <path
+     style="fill:#5ccbff;fill-opacity:0.25;stroke:#5ccbff;stroke-opacity:1"
+     d="m 148.57963,275.28309 c 21.4352,-22.63723 77.75321,-24.57428 102.32749,0 24.57428,24.57428 53.11271,51.74437 79.23847,76.57434 -89.06229,67.66093 -178.03169,59.31446 -254.539275,0 28.033825,-27.90382 51.538115,-53.93711 72.973315,-76.57434 z"
+     id="blueQuad"
+     inkscape:connector-curvature="0"
+     sodipodi:nodetypes="zzccz" 
+     data-tone="E5" />
+  <path
+     style="fill:#ffff00;fill-opacity:0.25;stroke:#feff03;stroke-opacity:1"
+     d="m 278.15379,253.94637 c -23.68472,-23.68472 -20.93353,-82.14847 0,-103.082 20.93353,-20.93353 53.73241,-58.068451 74.90549,-82.173466 62.94638,73.800056 59.49958,190.072856 0,256.222966 -22.92195,-22.0382 -51.22077,-47.28278 -74.90549,-70.9675 z"
+     id="yellowQuad"
+     inkscape:connector-curvature="0"
+     sodipodi:nodetypes="zzccz" 
+     data-tone="C4"/>
+</svg>
+		</div>
+		<div id="tones">
+			<audio id="A_440">
+				<source src="tones/ogg/A_440.ogg" type="audio/ogg" preload="auto">
+				<source src="tones/mp3/A_440.mp3" type="audio/mpeg" preload="auto">
+			</audio> 
+			<audio id="C_554">
+				<source src="tones/ogg/C_554.ogg" type="audio/ogg" preload="auto">
+				<source src="tones/mp3/C_554.mp3" type="audio/mpeg" preload="auto">
+			</audio> 
+			<audio id="E_329">
+				<source src="tones/ogg/E_329.ogg" type="audio/ogg" preload="auto">
+				<source src="tones/mp3/E_329.mp3" type="audio/mpeg" preload="auto">
+			</audio> 
+			<audio id="E_659">
+				<source src="tones/ogg/E_659.ogg" type="audio/ogg" preload="auto">
+				<source src="tones/mp3/E_659.mp3" type="audio/mpeg" preload="auto">
+			</audio> 
+		</div>
+	</div>
+</div>
+</body>
+</html>
