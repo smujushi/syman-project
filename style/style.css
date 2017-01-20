@@ -1,0 +1,33 @@
+.ui-page-active {
+	background: #222222;
+	color: #ffffff;
+}
+
+.center {
+	text-align: center;
+}
+
+.ui-table {
+	color: #ffffff;
+}
+
+.serviceLabel {
+	padding-left: 7px;
+	display: block;
+	font-size: 0.9em;
+}
+
+.serviceValue {
+	font-size: 0.85em;
+	padding-left: 14px;
+}
+
+.hidden {
+	color: #222;
+	display: block;
+	margin: 20px auto;
+	padding: 20px;
+	text-shadow: none;
+	text-align: center;
+	width: 300px;
+}
